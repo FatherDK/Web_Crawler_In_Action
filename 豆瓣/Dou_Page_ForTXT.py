@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import re
+import openpyxl
 
 def Make_Soup(start):
     headers = {'User-Agent':'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36'}
@@ -58,6 +59,26 @@ def WriteToTXT():
             f.write(ranks[i] + ' '+ titles[i] + '\n导演：'+ directors[i] + ' 演员：'+ actors[i] + '\n'+ years[i] + ' '+ countries[i]
                     + ' '+ types[i] + ' '+ scores[i] + ' \n'+ quotes[i] + "\n\n")
 
+def WriteToExcel():
+    wb = openpyxl.Workbook()
+    ws = wb.active
+
+    ws['A1'] = "排名"
+    ws['B1'] = "评分"
+    ws['C1'] = "电影名称"
+    ws['D1'] = "导演"
+    ws['E1'] = "演员"
+    ws['F1'] = "发行时间"
+    ws['G1'] = "发行国"
+    ws['H1'] = "类型"
+    ws['I1'] = "引用"
+
+    for i in range(len(titles)):
+        ws.append([ranks[i], scores[i], titles[i], directors[i], actors[i], years[i], countries[i], types[i], quotes[i]])
+
+    wb.save("豆瓣250.xlsx")
+
+
 if __name__ == '__main__':
 
     ranks = []  # 排名
@@ -79,5 +100,6 @@ if __name__ == '__main__':
         Get_Ranks(soup)
         Get_Titles(soup)
         Get_Others(soup)
-        WriteToTXT()
+        # WriteToTXT()
+        WriteToExcel()
         start += 25
